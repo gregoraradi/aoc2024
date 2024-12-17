@@ -9,7 +9,8 @@
 namespace aoc2024 {
 
 std::uint32_t Day_03::run(std::vector<std::string> const &data) {
-  return part1(data);
+  return part2(data);
+  // return part1(data);
 }
 
 std::uint32_t Day_03::part1(std::vector<std::string> const &data) {
@@ -51,6 +52,51 @@ std::uint32_t Day_03::part1(std::vector<std::string> const &data) {
   return sum;
 }
 
-std::uint32_t Day_03::part2(std::vector<std::string> const &data) { return 0; }
+std::uint32_t Day_03::part2(std::vector<std::string> const &data) {
+  std::uint32_t sum{0};
+  std::regex pattern{R"(do\(\)|don't\(\)|(mul\(\d{1,3},\d{1,3}\))+?)"};
+  bool do_mul{false};
+  for (auto const &line : data) {
+
+    std::sregex_iterator begin(line.begin(), line.end(), pattern);
+    std::sregex_iterator end;
+
+    for (auto it = begin; it != end; ++it) {
+
+      std::smatch match = *it;
+      std::string element = match.str();
+
+      std::cout << "Match: " << match.str() << std::endl;
+
+      if (element == "do()") {
+        do_mul = true;
+      } else if (element == "don't()") {
+        do_mul = false;
+      } else {
+        if (!do_mul) {
+          continue;
+        }
+        std::regex num_pattern(R"(\d{1,3})");
+
+        std::sregex_iterator begin2(element.begin(), element.end(),
+                                    num_pattern);
+
+        std::sregex_iterator end2;
+
+        std::string lhs_str{begin2->str()};
+
+        std::advance(begin2, 1);
+
+        std::string rhs_str{begin2->str()};
+
+        std::uint32_t product =
+            std::atoi(lhs_str.c_str()) * std::atoi(rhs_str.c_str());
+
+        sum += product;
+      }
+    }
+  }
+  return sum;
+}
 
 } // namespace aoc2024
