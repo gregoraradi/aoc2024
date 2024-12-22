@@ -9,6 +9,7 @@
 #include "days/day_01.hpp"
 #include "days/day_02.hpp"
 #include "days/day_03.hpp"
+#include "days/day_04.hpp"
 #include "filereader.hpp"
 #include "logger.hpp"
 
@@ -33,13 +34,13 @@ std::string full_filepath_by_day(std::string const &path, std::uint32_t day,
 int main() {
   {
     Filereader fr{};
-    auto filename = full_filepath(WORKSPACE, "day_03.txt");
+    auto filename = full_filepath(WORKSPACE, "day_04.txt");
     auto result = fr.get_data_linewise(filename);
 
-    aoc2024::Day_03 day1;
-    auto const day_result = day1.run(std::get<0>(result));
+    aoc2024::Day_04 day;
+    auto const day_result = day.run(std::get<0>(result));
 
-    aoc2024::logger::log_puzzle_sum(3, day_result);
+    aoc2024::logger::log_puzzle_sum(4, day_result);
   }
 
   return 0;
