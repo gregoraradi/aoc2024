@@ -10,8 +10,8 @@
 namespace aoc2024 {
 
 std::uint32_t Day_04::run(std::vector<std::string> const &data) {
-  // return part2(data);
-  return part1(data);
+  return part2(data);
+  // return part1(data);
 }
 
 std::uint32_t Day_04::part1(std::vector<std::string> const &data) {
@@ -226,6 +226,50 @@ std::uint32_t Day_04::part1(std::vector<std::string> const &data) {
 
 std::uint32_t Day_04::part2(std::vector<std::string> const &data) {
   std::uint32_t sum{0};
+
+  std::uint32_t const rows = data.size();
+  std::uint32_t const columns = data[0].size();
+
+  auto const check_mas = [&columns, &rows](auto const c, auto const r,
+                                           auto const &data) -> bool {
+    // check borders
+    auto const allowed_cols = ((c > 0) && (c < (columns - 1)));
+    auto const allowed_rows = ((r > 0) && (r < (rows - 1)));
+    if (!(allowed_cols && allowed_rows)) {
+      return false;
+    }
+
+    auto data_row = data.at(r);
+    if (data_row.at(c) == 'A') {
+      auto const top_left_elem = data.at(r - 1).at(c - 1);     // top left
+      auto const top_right_elem = data.at(r - 1).at(c + 1);    // top right
+      auto const bottom_left_elem = data.at(r + 1).at(c - 1);  // bottom left
+      auto const bottom_right_elem = data.at(r + 1).at(c + 1); // bottom right
+      std::string const current{top_left_elem, top_right_elem, bottom_left_elem,
+                                bottom_right_elem};
+
+      // tl - tr - bl - br
+      std::vector<std::string> mas_order{};
+      mas_order.emplace_back("MMSS");
+      mas_order.emplace_back("MSMS");
+      mas_order.emplace_back("SSMM");
+      mas_order.emplace_back("SMSM");
+
+      return std::ranges::contains(mas_order, current);
+    }
+    return false;
+  };
+
+  for (auto r = 0; r < rows; ++r) {
+    for (auto c = 0; c < columns; ++c) {
+      // check for xmas
+      auto const found = check_mas(c, r, data);
+      if (found) {
+        ++sum;
+      }
+    }
+  }
+
   return sum;
 }
 
